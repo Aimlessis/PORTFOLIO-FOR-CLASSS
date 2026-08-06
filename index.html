@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portafolio.exe</title>
+<style>
+  :root{
+    --face:#c0c0c0;
+    --face-dark:#808080;
+    --face-darker:#000000;
+    --face-light:#dfdfdf;
+    --face-lighter:#ffffff;
+    --titlebar-l:#000080;
+    --titlebar-r:#1084d0;
+    --desktop:#008080;
+    --link:#0000ee;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--desktop);
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 4px);
+    font-family:'Tahoma','MS Sans Serif',Geneva,Verdana,sans-serif;
+    font-size:13px;
+    color:#000;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:40px 16px 64px;
+  }
+
+  .bevel-out{
+    box-shadow:
+      inset -1px -1px 0 0 var(--face-darker),
+      inset  1px  1px 0 0 var(--face-lighter),
+      inset -2px -2px 0 0 var(--face-dark),
+      inset  2px  2px 0 0 var(--face-light);
+  }
+  .bevel-in{
+    box-shadow:
+      inset -1px -1px 0 0 var(--face-lighter),
+      inset  1px  1px 0 0 var(--face-darker),
+      inset -2px -2px 0 0 var(--face-light),
+      inset  2px  2px 0 0 var(--face-dark);
+  }
+
+  .window{
+    width:100%;
+    max-width:760px;
+    background:var(--face);
+    padding:3px;
+  }
+
+  .titlebar{
+    background:linear-gradient(90deg, var(--titlebar-l), var(--titlebar-r));
+    color:#fff;
+    font-weight:bold;
+    padding:3px 3px 3px 6px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    letter-spacing:.2px;
+  }
+  .titlebar .tleft{display:flex;align-items:center;gap:6px;}
+  .titlebar .ticon{
+    width:16px;height:16px;
+    background:var(--face);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:11px;
+  }
+  .tbuttons{display:flex;gap:2px;}
+  .tbuttons span{
+    width:16px;height:14px;
+    background:var(--face);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:bold;color:#000;
+    line-height:0;
+    cursor:default;
+  }
+
+  .menubar{
+    display:flex;
+    gap:14px;
+    padding:3px 8px;
+    font-size:12px;
+  }
+  .menubar span{cursor:default;}
+  .menubar span:first-letter{text-decoration:underline;}
+
+  .toolbar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:5px 8px;
+    margin:0 2px 4px;
+  }
+  .toolbar .path{
+    flex:1;
+    background:#fff;
+    padding:3px 6px;
+    font-size:12px;
+  }
+
+  .content{
+    background:#fff;
+    margin:0 2px 2px;
+    padding:8px;
+  }
+
+  .colhead{
+    display:grid;
+    grid-template-columns: 32px 1fr 190px;
+    background:var(--face);
+    font-weight:bold;
+    font-size:12px;
+    margin-bottom:4px;
+  }
+  .colhead div{
+    padding:4px 8px;
+    border-right:1px solid var(--face-dark);
+  }
+  .colhead div:last-child{border-right:none;}
+
+  .row{
+    display:grid;
+    grid-template-columns: 32px 1fr 190px;
+    align-items:center;
+    padding:6px 8px;
+  }
+  .row:nth-child(even){background:#f0f0f0;}
+  .row .icon{font-size:16px;}
+  .row .name{font-size:13px;}
+  .row .name small{
+    display:block;
+    font-size:11px;
+    color:#3a3a3a;
+    font-weight:normal;
+    margin-top:2px;
+  }
+
+  .win95-btn{
+    background:var(--face);
+    border:none;
+    padding:4px 10px;
+    font-family:inherit;
+    font-size:12px;
+    text-decoration:none;
+    color:#000;
+    display:inline-block;
+    cursor:pointer;
+  }
+  .win95-btn:active{
+    box-shadow:
+      inset -1px -1px 0 0 var(--face-lighter),
+      inset  1px  1px 0 0 var(--face-darker),
+      inset -2px -2px 0 0 var(--face-light),
+      inset  2px  2px 0 0 var(--face-dark) !important;
+  }
+  .no-link{
+    font-size:11px;
+    color:#5a5a5a;
+    padding-left:10px;
+  }
+
+  .statusbar{
+    display:flex;
+    gap:2px;
+    padding:3px 4px 0;
+  }
+  .statusbar div{
+    padding:3px 8px;
+    font-size:11px;
+  }
+  .statusbar div:first-child{flex:1;}
+
+  @media (max-width:600px){
+    .colhead, .row{grid-template-columns: 28px 1fr 96px;}
+    .win95-btn{font-size:11px;padding:4px 6px;}
+    .row .name small{font-size:10px;}
+  }
+
+  .taskbar{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    height:34px;
+    background:var(--face);
+    display:flex;
+    align-items:center;
+    padding:2px 4px;
+    gap:6px;
+  }
+  .start-btn{
+    display:flex; align-items:center; gap:5px;
+    padding:3px 10px 3px 6px;
+    font-weight:bold;
+    font-size:13px;
+  }
+  .start-btn .flag{
+    width:16px;height:16px;
+    background:conic-gradient(#ff0000 0 90deg,#00aa00 90deg 180deg,#0000ff 180deg 270deg,#ffcc00 270deg 360deg);
+    display:inline-block;
+  }
+  .task-item{
+    padding:3px 12px;
+    font-size:12px;
+    display:flex;align-items:center;gap:6px;
+  }
+  .clock{
+    margin-left:auto;
+    padding:5px 10px;
+    font-size:12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="window bevel-out">
+  <div class="titlebar">
+    <div class="tleft">
+      <span class="ticon">💾</span>
+      <span>PORTAFOLIO.EXE — C:\CURSO\FUNDAMENTOS_CS</span>
+    </div>
+    <div class="tbuttons">
+      <span class="bevel-out">_</span>
+      <span class="bevel-out">□</span>
+      <span class="bevel-out">✕</span>
+    </div>
+  </div>
+
+  <div class="menubar">
+    <span>Archivo</span>
+    <span>Edicion</span>
+    <span>Ver</span>
+    <span>Ayuda</span>
+  </div>
+
+  <div class="toolbar bevel-out">
+    <span>📂</span>
+    <div class="path bevel-in">C:\CURSO\FUNDAMENTOS_CS\ENTREGAS</div>
+  </div>
+
+  <div class="content bevel-in">
+    <div class="colhead">
+      <div></div>
+      <div>Nombre</div>
+      <div>Repositorio</div>
+    </div>
+
+    <div class="row">
+      <div class="icon">📁</div>
+      <div class="name">Trabajando con Formularios<small>30 ejercicios convertidos a programas de formulario</small></div>
+      <div><a class="win95-btn bevel-out" href="https://github.com/Aimlessis/30-programas" target="_blank" rel="noopener">Abrir ↗</a></div>
+    </div>
+
+    <div class="row">
+      <div class="icon">📁</div>
+      <div class="name">Examen Parcial</div>
+      <div><a class="win95-btn bevel-out" href="https://github.com/Aimlessis/estacionmeteorologica" target="_blank" rel="noopener">Abrir ↗</a></div>
+    </div>
+
+    <div class="row">
+      <div class="icon">📁</div>
+      <div class="name">Ejercicios usando IF, else y Switch</div>
+      <div><a class="win95-btn bevel-out" href="https://github.com/Aimlessis/-srg" target="_blank" rel="noopener">Abrir ↗</a></div>
+    </div>
+
+    <div class="row">
+      <div class="icon">📁</div>
+      <div class="name">Ejercicios usando For, Foreach, While</div>
+      <div><a class="win95-btn bevel-out" href="https://github.com/Aimlessis/-srg" target="_blank" rel="noopener">Abrir ↗</a></div>
+    </div>
+
+    <div class="row">
+      <div class="icon">📁</div>
+      <div class="name">Completa la clase y crea tu propia versión<small>Clase de Automóviles, versión propia con interacciones</small></div>
+      <div><a class="win95-btn bevel-out" href="https://github.com/Aimlessis/Vehiculos-raylib" target="_blank" rel="noopener">Abrir ↗</a></div>
+    </div>
+
+    <div class="row">
+      <div class="icon">📁</div>
+      <div class="name">Ejercicion con IF y Switch v2<small>Calculadora, conversor de rol, dispensador de bebidas, estaciones del año</small></div>
+      <div><a class="win95-btn bevel-out" href="https://github.com/Aimlessis/-srg" target="_blank" rel="noopener">Abrir ↗</a></div>
+    </div>
+
+    <div class="row">
+      <div class="icon">📁</div>
+      <div class="name">Github para principiantes</div>
+      <div><span class="no-link">— sin repositorio —</span></div>
+    </div>
+
+  </div>
+
+  <div class="statusbar">
+    <div class="bevel-in">7 objeto(s)</div>
+    <div class="bevel-in">Aimlessis</div>
+  </div>
+</div>
+
+<div class="taskbar bevel-out">
+  <div class="start-btn bevel-out"><span class="flag"></span>Inicio</div>
+  <div class="task-item bevel-in">💾 Portafolio.exe</div>
+  <div class="clock bevel-in">C# · 2026</div>
+</div>
+
+</body>
+</html>
